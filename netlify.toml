@@ -1,5 +1,5 @@
 [build]
-  command = "./gradlew :composeApp:wasmJsBrowserProductionWebpack && cp composeApp/build/processedResources/wasmJs/main/index.html composeApp/build/kotlin-webpack/wasmJs/productionExecutable/index.html && cp composeApp/build/processedResources/wasmJs/main/styles.css composeApp/build/kotlin-webpack/wasmJs/productionExecutable/styles.css"
+  command = "./gradlew --no-configuration-cache --stacktrace --info :composeApp:wasmJsBrowserProductionWebpack && cp composeApp/build/processedResources/wasmJs/main/index.html composeApp/build/kotlin-webpack/wasmJs/productionExecutable/index.html && cp composeApp/build/processedResources/wasmJs/main/styles.css composeApp/build/kotlin-webpack/wasmJs/productionExecutable/styles.css"
   publish = "composeApp/build/kotlin-webpack/wasmJs/productionExecutable"
 
 [build.environment]
