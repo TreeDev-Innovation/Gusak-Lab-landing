@@ -1,6 +1,7 @@
 package com.gusak.lab.landing.app.landing
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gusaklab.composeapp.generated.resources.Res
+import gusaklab.composeapp.generated.resources.goose
+import org.jetbrains.compose.resources.painterResource
 
 @Preview
 @Composable
@@ -52,18 +57,17 @@ private fun Header() {
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Circular Image Placeholder (goose.jpeg)
+        // Circular Image - goose.jpeg
         Box(
             modifier = Modifier
                 .size(200.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "🦆",
-                fontSize = 120.sp,
-                textAlign = TextAlign.Center
+            Image(
+                painter = painterResource(Res.drawable.goose),
+                contentDescription = "Gusak Lab Logo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
 
