@@ -1,0 +1,11 @@
+[build]
+  command = "./gradlew :composeApp:wasmJsBrowserProductionWebpack && cp composeApp/build/processedResources/wasmJs/main/index.html composeApp/build/kotlin-webpack/wasmJs/productionExecutable/index.html && cp composeApp/build/processedResources/wasmJs/main/styles.css composeApp/build/kotlin-webpack/wasmJs/productionExecutable/styles.css"
+  publish = "composeApp/build/kotlin-webpack/wasmJs/productionExecutable"
+
+[build.environment]
+  JAVA_VERSION = "17"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
