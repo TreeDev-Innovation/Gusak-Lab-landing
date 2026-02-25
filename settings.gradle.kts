@@ -33,3 +33,5 @@ plugins {
 }
 
 include(":composeApp")
+include(":playable-core")
+include(":playable-web")

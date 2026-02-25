@@ -1,10 +1,10 @@
 [build]
-  base = "web"
-  command = "npm install && npm run build"
-  publish = "out"
+  command = "cd web && npm install && npm run build && mkdir -p out/playable && if [ -d /usr/lib/jvm/java-17-openjdk-amd64 ]; then export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64; elif [ -d /usr/lib/jvm/java-21-openjdk-amd64 ]; then export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64; else if [ ! -x ../.netlify-jdk/bin/java ]; then mkdir -p ../.netlify-jdk && curl -fsSL -L 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse' | tar -xz -C ../.netlify-jdk --strip-components=1; fi; export JAVA_HOME=$PWD/../.netlify-jdk; fi && export PATH=\"$JAVA_HOME/bin:$PATH\" && cd .. && ./gradlew :playable-web:jsBrowserProductionWebpack --no-configuration-cache && cp playable-web/build/kotlin-webpack/js/productionExecutable/playable-ad.js web/out/playable/ && cp playable-web/build/kotlin-webpack/js/productionExecutable/*.wasm web/out/playable/ && cp playable-web/src/jsMain/resources/index.html web/out/playable/"
+  publish = "web/out"
 
 [build.environment]
   NODE_VERSION = "20"
+  JAVA_VERSION = "17"
 
 [[redirects]]
   from = "/*"

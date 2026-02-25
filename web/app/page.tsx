@@ -1,8 +1,148 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useAnimationFrame } from "framer-motion";
 import Image from "next/image";
 import { Mail, Apple, Play, Gamepad2, Sparkles, Users } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+
+// Puzzle piece shapes (matching the game)
+const PIECE_SHAPES = [
+  // L-shape
+  [[1, 0], [1, 0], [1, 1]],
+  // T-shape
+  [[1, 1, 1], [0, 1, 0]],
+  // Square
+  [[1, 1], [1, 1]],
+  // Line
+  [[1, 1, 1]],
+  // Z-shape
+  [[1, 1, 0], [0, 1, 1]],
+  // S-shape
+  [[0, 1, 1], [1, 1, 0]],
+];
+
+// Base positions for pieces (relative 0-1)
+const BASE_POSITIONS = [
+  [0.12, 0.12], [0.10, 0.40], [0.08, 0.68], [0.14, 0.88],
+  [0.30, 0.20], [0.32, 0.52], [0.28, 0.82],
+  [0.50, 0.15], [0.48, 0.48], [0.52, 0.78],
+  [0.70, 0.22], [0.72, 0.55], [0.68, 0.85],
+  [0.88, 0.18], [0.90, 0.50], [0.86, 0.80],
+];
+
+// Puzzle piece component
+function PuzzlePiece({ shape, cellSize = 10 }: { shape: number[][], cellSize?: number }) {
+  return (
+    <div className="flex flex-col">
+      {shape.map((row, rowIdx) => (
+        <div key={rowIdx} className="flex">
+          {row.map((cell, colIdx) => {
+            if (cell === 0) return <div key={colIdx} style={{ width: cellSize, height: cellSize }} />;
+            
+            // Calculate rounded corners based on neighbors
+            const hasTop = rowIdx > 0 && shape[rowIdx - 1]?.[colIdx] === 1;
+            const hasBottom = rowIdx < shape.length - 1 && shape[rowIdx + 1]?.[colIdx] === 1;
+            const hasLeft = colIdx > 0 && row[colIdx - 1] === 1;
+            const hasRight = colIdx < row.length - 1 && row[colIdx + 1] === 1;
+            
+            const radius = cellSize * 0.25;
+            const borderRadius = `${!hasTop && !hasLeft ? radius : 0}px ${!hasTop && !hasRight ? radius : 0}px ${!hasBottom && !hasRight ? radius : 0}px ${!hasBottom && !hasLeft ? radius : 0}px`;
+            
+            return (
+              <div
+                key={colIdx}
+                style={{
+                  width: cellSize,
+                  height: cellSize,
+                  backgroundColor: '#DCECCB',
+                  border: '1px solid rgba(139, 195, 74, 0.6)',
+                  borderRadius,
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Lissajous animated background
+function LissajousPuzzlePieces() {
+  const [time, setTime] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    let animationId: number;
+    let startTime = Date.now();
+    
+    const animate = () => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      setTime(elapsed);
+      animationId = requestAnimationFrame(animate);
+    };
+    
+    animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
+  }, []);
+
+  // Lissajous parameters
+  const amplitudeX = 0.06;
+  const amplitudeY = 0.08;
+  const freqA = 3;
+  const freqB = 2;
+  const freqZ = 5;
+  const period = 40; // seconds for full cycle
+
+  return (
+    <div ref={containerRef} className="absolute inset-0">
+      {BASE_POSITIONS.slice(0, 12).map((pos, i) => {
+        const shape = PIECE_SHAPES[i % PIECE_SHAPES.length];
+        const phaseOffset = (i / 12) * Math.PI * 2;
+        const speedFactor = 0.7 + (i % 4) * 0.15;
+        
+        const t = (time / period) * Math.PI * 2 * speedFactor + phaseOffset;
+        
+        // Lissajous curve
+        const xOffset = amplitudeX * Math.sin(freqA * t + Math.PI / 4);
+        const yOffset = amplitudeY * Math.sin(freqB * t);
+        const zValue = Math.sin(freqZ * t + Math.PI / 3);
+        
+        // Depth effect
+        const minScale = 0.6;
+        const maxScale = 1.4;
+        const scale = minScale + (maxScale - minScale) * ((zValue + 1) / 2);
+        
+        const minAlpha = 0.03;
+        const maxAlpha = 0.12;
+        const alpha = minAlpha + (maxAlpha - minAlpha) * ((zValue + 1) / 2);
+        
+        // Position
+        const x = (pos[0] + xOffset) * 100;
+        const y = (pos[1] + yOffset) * 100;
+        
+        // Rotation
+        const rotation = (i * 30) + (time * 0.3 * 6 * (i % 2 === 0 ? 1 : -1));
+        
+        return (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left: `${x}%`,
+              top: `${y}%`,
+              transform: `rotate(${rotation}deg) scale(${scale})`,
+              opacity: alpha,
+              transition: 'none',
+            }}
+          >
+            <PuzzlePiece shape={shape} cellSize={12} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -224,18 +364,30 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="bg-surface rounded-3xl border border-gray-800 overflow-hidden"
           >
-            {/* Placeholder for Compose WASM playable */}
-            <div className="aspect-video flex items-center justify-center bg-surface-light">
-              <div className="text-center">
-                <Gamepad2 className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-500 mb-4">Playable Demo</p>
-                <a
-                  href="/playable/"
-                  className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors"
+            {/* Lissajous floating puzzle pieces - matching the game background */}
+            <div className="aspect-video flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: '#121212' }}>
+              {/* Floating puzzle pieces with Lissajous movement */}
+              <LissajousPuzzlePieces />
+
+              {/* Center content */}
+              <div className="relative z-10 text-center bg-black/60 backdrop-blur-sm px-12 py-8 rounded-2xl border border-[#8BC34A]/30">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
                 >
-                  <Sparkles className="w-5 h-5" />
-                  Launch Demo
-                </a>
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: '#8BC34A' }}>Elder Puzzle Scroll</h3>
+                  <p className="text-gray-400 mb-6">Solve puzzles, challenge your mind</p>
+                  <a
+                    href="/playable/"
+                    className="inline-flex items-center gap-2 text-black px-8 py-4 rounded-xl font-medium transition-all hover:scale-105 shadow-lg"
+                    style={{ backgroundColor: '#8BC34A' }}
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    Play Now
+                  </a>
+                </motion.div>
               </div>
             </div>
           </motion.div>
