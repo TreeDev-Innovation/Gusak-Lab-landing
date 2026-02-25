@@ -20,6 +20,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,6 +110,9 @@ private fun Header() {
 
 @Composable
 private fun Footer() {
+    val iosClicks = remember { mutableIntStateOf(0) }
+    val androidClicks = remember { mutableIntStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,7 +136,7 @@ private fun Footer() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(
-                onClick = { },
+                onClick = { iosClicks.intValue++ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -140,11 +145,11 @@ private fun Footer() {
                     .weight(1f)
                     .height(48.dp)
             ) {
-                Text("iOS", fontSize = 14.sp)
+                Text("iOS (${iosClicks.intValue})", fontSize = 14.sp)
             }
 
             Button(
-                onClick = { },
+                onClick = { androidClicks.intValue++ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -153,7 +158,7 @@ private fun Footer() {
                     .weight(1f)
                     .height(48.dp)
             ) {
-                Text("Android", fontSize = 14.sp)
+                Text("Android (${androidClicks.intValue})", fontSize = 14.sp)
             }
         }
 
