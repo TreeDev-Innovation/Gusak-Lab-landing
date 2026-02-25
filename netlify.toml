@@ -1,9 +1,10 @@
 [build]
-  command = "if [ -d /usr/lib/jvm/java-17-openjdk-amd64 ]; then export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64; elif [ -d /usr/lib/jvm/java-21-openjdk-amd64 ]; then export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64; else if [ ! -x .netlify-jdk/bin/java ]; then mkdir -p .netlify-jdk && curl -fsSL -L 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse' | tar -xz -C .netlify-jdk --strip-components=1; fi; export JAVA_HOME=$PWD/.netlify-jdk; fi && export PATH=\"$JAVA_HOME/bin:$PATH\" && java -version && ./gradlew --no-configuration-cache --stacktrace --info :composeApp:wasmJsBrowserProductionWebpack && cp composeApp/build/processedResources/wasmJs/main/index.html composeApp/build/kotlin-webpack/wasmJs/productionExecutable/index.html && cp composeApp/build/processedResources/wasmJs/main/styles.css composeApp/build/kotlin-webpack/wasmJs/productionExecutable/styles.css && rm -rf composeApp/build/kotlin-webpack/wasmJs/productionExecutable/composeResources && cp -R composeApp/build/processedResources/wasmJs/main/composeResources composeApp/build/kotlin-webpack/wasmJs/productionExecutable/composeResources && cp composeApp/build/processedResources/wasmJs/main/app-ads.txt composeApp/build/kotlin-webpack/wasmJs/productionExecutable/app-ads.txt"
-  publish = "composeApp/build/kotlin-webpack/wasmJs/productionExecutable"
+  base = "web"
+  command = "npm install && npm run build"
+  publish = "out"
 
 [build.environment]
-  JAVA_VERSION = "17"
+  NODE_VERSION = "20"
 
 [[redirects]]
   from = "/*"
