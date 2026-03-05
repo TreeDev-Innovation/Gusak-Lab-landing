@@ -87,7 +87,7 @@ private fun Header() {
 
         // Email Address
         Text(
-            text = "gusak.lab@gmail.com",
+            text = "gusak.lab@gmail.com | contacts@gusaklab.com",
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,

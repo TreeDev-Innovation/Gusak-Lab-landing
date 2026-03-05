@@ -207,16 +207,31 @@ export default function Home() {
           </motion.p>
 
           {/* Contact */}
-          <motion.a
-            href="mailto:gusak.lab@gmail.com"
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors mb-12"
+            className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-primary mb-12"
           >
-            <Mail className="w-5 h-5" />
-            <span>gusak.lab@gmail.com</span>
-          </motion.a>
+            <div className="flex items-center gap-2">
+              <Mail className="w-5 h-5" />
+              <a
+                href="mailto:gusak.lab@gmail.com"
+                className="hover:text-primary-dark transition-colors"
+              >
+                gusak.lab@gmail.com
+              </a>
+            </div>
+
+            <span className="hidden sm:inline text-gray-600">|</span>
+
+            <a
+              href="mailto:contacts@gusaklab.com"
+              className="hover:text-primary-dark transition-colors"
+            >
+              contacts@gusaklab.com
+            </a>
+          </motion.div>
 
           {/* Scroll indicator */}
           <motion.div
