@@ -7,6 +7,11 @@
   JAVA_VERSION = "17"
 
 [[redirects]]
+  from = "/app-ads.txt"
+  to = "/app-ads.txt"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

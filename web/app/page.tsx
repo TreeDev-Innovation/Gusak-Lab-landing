@@ -415,6 +415,14 @@ export default function Home() {
           <p className="text-gray-500">
             © 2026 Gusak Lab. All rights reserved.
           </p>
+          <div className="mt-4">
+            <a
+              href="/en-US/privacy-policy/"
+              className="text-gray-400 hover:text-primary transition-colors"
+            >
+              Privacy Policy
+            </a>
+          </div>
         </div>
       </footer>
     </main>
