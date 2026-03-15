@@ -3,6 +3,7 @@
 import { motion, useAnimationFrame } from "framer-motion";
 import Image from "next/image";
 import { Mail, Apple, Play, Gamepad2, Sparkles, Users } from "lucide-react";
+import { STORE_LINKS } from "./config/store-links";
 import { useRef, useState, useEffect } from "react";
 
 // Puzzle piece shapes (matching the game)
@@ -331,14 +332,14 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                   <a
-                    href="#"
+                    href={STORE_LINKS.appStore}
                     className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                   >
                     <Apple className="w-5 h-5" />
                     App Store
                   </a>
                   <a
-                    href="#"
+                    href={STORE_LINKS.googlePlay}
                     className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors"
                   >
                     <Play className="w-5 h-5" />

@@ -51,6 +51,11 @@ private data class DragState(
 
 @Composable
 fun PlayableAdScreen() {
+    // Load store links config on first composition
+    LaunchedEffect(Unit) {
+        StoreLinks.load()
+    }
+    
     val engine = remember { PlayablePuzzleEngine() }
     val density = LocalDensity.current
     
@@ -595,40 +600,54 @@ private external interface Console {
 }
 
 /**
+ * Store URLs - єдине джерело правди: /config/store-links.json
+ */
+private object StoreLinks {
+    var googlePlay = "https://play.google.com/store/apps/details?id=com.gusaklab.puzzlescroll"
+    var appStore = "https://apps.apple.com/ua/app/id6760315933"
+    private var loaded = false
+    
+    fun load() {
+        if (loaded) return
+        loaded = true
+        
+        kotlinx.browser.window.fetch("/config/store-links.json")
+            .then { response -> response.json() }
+            .then { json ->
+                val data = json.asDynamic()
+                googlePlay = data.googlePlay as? String ?: googlePlay
+                appStore = data.appStore as? String ?: appStore
+                console.log("Store links loaded from config")
+            }
+            .catch { error ->
+                console.log("Failed to load store links config, using defaults: $error")
+            }
+    }
+}
+
+/**
  * Відкриває відповідний App Store залежно від платформи користувача.
- * 
- * Визначає платформу за User Agent:
- * - Android -> Google Play Store
- * - iOS (iPhone/iPad/iPod) -> Apple App Store
- * - Desktop -> Google Play Store (за замовчуванням)
- * 
- * Щоб змінити посилання на стори, відредагуйте константи нижче.
  */
 private fun openAppStore() {
     try {
         val userAgent = kotlinx.browser.window.navigator.userAgent.lowercase()
         
-        // TODO: Замініть на реальні посилання на ваші додатки
-        val googlePlayUrl = "https://play.google.com/store/apps/details?id=com.letit0or1.kawa"
-        val appStoreUrl = "https://apps.apple.com/app/id123456789"
-        
         val storeUrl = when {
             userAgent.contains("android") -> {
                 console.log("Detected Android device, opening Google Play")
-                googlePlayUrl
+                StoreLinks.googlePlay
             }
             userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("ipod") -> {
                 console.log("Detected iOS device, opening App Store")
-                appStoreUrl
+                StoreLinks.appStore
             }
             else -> {
                 console.log("Desktop/unknown platform, opening Google Play")
-                googlePlayUrl
+                StoreLinks.googlePlay
             }
         }
         
         console.log("Opening URL: $storeUrl")
-        // Use location.href instead of window.open to avoid popup blockers
         kotlinx.browser.window.location.href = storeUrl
     } catch (e: Exception) {
         console.log("Error opening store: ${e.message}")
