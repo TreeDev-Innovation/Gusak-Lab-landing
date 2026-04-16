@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "23T2SM7385.com.gusaklab.puzzlescroll",
+                "paths": ["/ep", "/ep/*"]
+            }
+        ]
+    }
+}

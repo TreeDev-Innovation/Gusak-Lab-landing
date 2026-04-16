@@ -22,6 +22,28 @@
    [headers.values]
      Content-Type = "text/plain; charset=utf-8"
 
+[[headers]]
+  for = "/.well-known/apple-app-site-association"
+  
+  [headers.values]
+    Content-Type = "application/json"
+
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  
+  [headers.values]
+    Content-Type = "application/json"
+
+[[redirects]]
+  from = "/ep"
+  to = "/ep/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/ep/*"
+  to = "/ep/index.html"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
