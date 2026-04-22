@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Mail, Apple, Play, Gamepad2, Sparkles, Users } from "lucide-react";
 import { STORE_LINKS } from "./config/store-links";
 import { useRef, useState, useEffect } from "react";
+import { analytics } from "./components/GoogleAnalytics";
 
 // Puzzle piece shapes (matching the game)
 const PIECE_SHAPES = [
@@ -333,6 +334,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                   <a
                     href={STORE_LINKS.appStore}
+                    onClick={() => analytics.trackStoreClick("app_store")}
                     className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                   >
                     <Apple className="w-5 h-5" />
@@ -340,6 +342,7 @@ export default function Home() {
                   </a>
                   <a
                     href={STORE_LINKS.googlePlay}
+                    onClick={() => analytics.trackStoreClick("google_play")}
                     className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors"
                   >
                     <Play className="w-5 h-5" />
@@ -397,6 +400,7 @@ export default function Home() {
                   <p className="text-gray-400 mb-6">Solve puzzles, challenge your mind</p>
                   <a
                     href="/playable/"
+                    onClick={() => analytics.trackDemoLaunch()}
                     className="inline-flex items-center gap-2 text-black px-8 py-4 rounded-xl font-medium transition-all hover:scale-105 shadow-lg"
                     style={{ backgroundColor: '#8BC34A' }}
                   >
